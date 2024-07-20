@@ -15,7 +15,7 @@ class SalesInsert_EventHandler
                 
         logTable.clear();
         logTable.SalesId                = salesTable.salesId;
-        logTable.CustId                 = salesTable.custTable_CustAccount;        
+        logTable.CustId                 = salesTable.custAccount;        
         logTable.SalesCreatedDateTime   = salesTable.CreatedDateTime;
         logTable.insert();       
     }
