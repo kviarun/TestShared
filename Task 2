@@ -1,0 +1,24 @@
+class SalesInsert_EventHandler
+{
+    
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [DataEventHandler(tableStr(SalesTable), DataEventType::Inserted)]
+    public static void SalesTable_onInserted(Common sender, DataEventArgs e)
+    {
+        SalesTable salesTable = sender as SalesTable;
+        SalesLogTable logTable;
+
+                
+        logTable.clear();
+        logTable.SalesId                = salesTable.salesId;
+        logTable.CustId                 = salesTable.custTable_CustAccount;
+        logTable.SalesId                = salesTable.salesId;
+        logTable.SalesCreatedDateTime   = salesTable.CreatedDateTime;
+        logTable.insert();       
+    }
+    
+}
