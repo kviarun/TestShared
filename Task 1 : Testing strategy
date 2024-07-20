@@ -1,0 +1,10 @@
+Unit testing
+1. Make sure the account doesn't exist in the company
+2. Create a runnable class and execute the code logic
+3. First create the customer and make sure the customer and address records are created with the specifed values
+4. Next execute the update task and make sure the name and address are updated correctly.
+
+Functional testing
+1. Check the customer after being created
+2. Check the customer after being updated
+
