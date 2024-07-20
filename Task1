@@ -1,0 +1,82 @@
+class XMA_TestRunnableClass
+{
+    public static void main(Args _args)
+    {
+        try
+        {
+            ttsbegin;
+            XMA_TestSalesOrderRunnableClass::processCustomerRecord("ABC_XYZ", "ABC",  "New Streee");
+            ttscommit;
+        }
+        //Task 1.3
+        catch (Exception::UpdateConflict)
+        {
+            if (appl.ttsLevel() == 0)
+            {
+                if (xSession::currentRetryCount() > 3)
+                {
+                    throw Exception::UpdateConflictNotRecovered;
+                }
+                else
+                {
+                    retry;
+                }
+            }
+            else
+            {
+                throw Exception::UpdateConflict;
+            }
+        }
+    }
+
+    static void processCustomerRecord(CustAccount   _accountNum, FirstName _name = '', LogisticsAddressStreet _street = '')
+    {
+        CustTable custTable;
+        DirParty                    party;
+        DirPartyTable               partyName; 
+        DirPartyPostalAddressView   postalAddress;
+        DirPersonName   dirPersonName;
+        date            dateFrom,    dateTo;
+
+        changecompany('X200')
+        {
+            ttsbegin;
+
+            custTable = CustTable::find(_accountNum, true);
+            //Task 1.1
+            if (!custTable)
+            {
+                
+                custTable.clear();
+                custTable.initValue();
+                custTable.AccountNum = _accountNum;
+                custTable.CustGroup = 'Local';
+                custTable.insert(DirPartyType::Organization, "XYZ");
+
+                party = DirParty::constructFromCommon(custTable);
+ 
+                postalAddress.LocationName      ='Test address';
+                postalAddress.CountryRegionId   ='UK';
+                postalAddress.City              ='Leeds';
+                postalAddress.Street            ='Street 1';
+                postalAddress.ZipCode           ='LS4';
+                party.createOrUpdatePostalAddress(postalAddress);
+                
+            }
+            //Task 1.2
+            else
+            {
+                               
+                partyName = DirPartyTable::findRec(custTable.Party, true);
+                partyName.Name = _name;
+                partyName.update();
+
+                party = DirParty::constructFromCommon(custTable);
+                postalAddress.Street    = _street;
+                party.createOrUpdatePostalAddress(postalAddress);
+            }
+
+            ttscommit;
+        }
+    }    
+}
